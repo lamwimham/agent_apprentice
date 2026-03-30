@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE 流式测试</title>
+    <style>
+        #output {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 200px;
+        }
+        .chunk {
+            color: #00ff00;
+        }
+        .info {
+            color: #888;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SSE 流式接收测试</h1>
+    <button onclick="connect()">连接 SSE</button>
+    <button onclick="disconnect()">断开</button>
+    <div id="output"></div>
+
+    <script>
+        let eventSource = null;
+        const output = document.getElementById('output');
+
+        function log(message, isInfo = false) {
+            const time = new Date().toLocaleTimeString();
+            const className = isInfo ? 'info' : 'chunk';
+            output.innerHTML += `<span class="${className}">[${time}] ${message}</span>\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function connect() {
+            output.innerHTML = '';
+            log('正在连接...', true);
+            
+            // 关键：禁用缓存并设置 no-cache
+            const url = 'http://localhost:8000/sse?t=' + Date.now();
+            
+            // 方法 1: 使用 EventSource (标准 SSE)
+            eventSource = new EventSource(url);
+            
+            eventSource.onopen = () => {
+                log('✓ 连接已建立', true);
+            };
+            
+            eventSource.onmessage = (event) => {
+                log('收到：' + event.data);
+            };
+            
+            eventSource.onerror = (error) => {
+                if (eventSource.readyState === EventSource.CONNECTING) {
+                    log('正在重连...', true);
+                } else if (eventSource.readyState === EventSource.CLOSED) {
+                    log('✗ 连接已关闭', true);
+                } else {
+                    log('✗ 错误：' + error, true);
+                }
+            };
+        }
+
+        function disconnect() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+                log('已断开连接', true);
+            }
+        }
+
+        // 页面关闭时断开连接
+        window.addEventListener('beforeunload', disconnect);
+    </script>
+</body>
+</html>

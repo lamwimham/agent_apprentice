@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: rag
+  ai:
+    dashscope:
+      api-key: sk-438000d276d3465c8601f0f598d2b58f
+server:
+  port: 8001

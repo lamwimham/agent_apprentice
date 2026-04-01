@@ -15,11 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rag")
-public class RagSpilterController {
+public class RagSplitterController {
 
     private final DocumentStrategyFactory documentStrategyFactory;
 
-    public RagSpilterController(DocumentStrategyFactory documentStrategyFactory) {
+    public RagSplitterController(DocumentStrategyFactory documentStrategyFactory) {
         this.documentStrategyFactory = documentStrategyFactory;
     }
 

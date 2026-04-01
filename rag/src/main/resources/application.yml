@@ -4,5 +4,22 @@ spring:
   ai:
     dashscope:
       api-key: sk-438000d276d3465c8601f0f598d2b58f
+      embedding:
+        api-key:
+        options:
+          model: "text-embedding-v4"
+          dimensions: 768
+    vectorstore:
+      pgvector:
+        index-type: hnsw
+        distance-type: cosine_distance
+        dimensions: 768
+        max-document-batch-size: 9
+        initialize-schema: true
+        table-name: vector_st
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rag
+    username: pgvector
+    password: pgvector
 server:
   port: 8001

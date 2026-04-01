@@ -1,5 +1,6 @@
 package com.keepin.rag.controller;
 
+import com.keepin.rag.cleaner.DocumentCleaner;
 import com.keepin.rag.reader.DocumentStrategyFactory;
 import org.springframework.ai.document.Document;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class RagReaderController {
         List<Document> documents;
 
         try {
-            documents = documentStrategyFactory.read(new File(filePath));
+            documents = DocumentCleaner.cleanDocuments(documentStrategyFactory.read(new File(filePath)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

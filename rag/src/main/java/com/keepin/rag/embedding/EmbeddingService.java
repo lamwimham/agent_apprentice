@@ -7,6 +7,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,9 @@ public class EmbeddingService {
      */
     public void embeddingAndSave(List<Document> documentList) {
 
+        if (CollectionUtils.isEmpty(documentList)) {
+            return;
+        }
         List<List<Document>> batches = new ArrayList<>();
 
         for (int i = 0; i < documentList.size(); i += 9) {
